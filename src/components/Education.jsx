@@ -66,7 +66,7 @@ const Education = () => {
     {
       degree: 'Bachelor of Computer Applications (BCA)',
       institution: 'GLA University, Mathura',
-      duration: '2023 – 2027',
+      duration: '2024 – 2027',
       score: '7.8 CGPA',
       icon: <GraduationCap className="w-5 h-5 text-primary" />,
       ongoing: true
