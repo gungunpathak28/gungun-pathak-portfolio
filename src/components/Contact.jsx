@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Mail, Send } from 'lucide-react';
+import { Mail, Send, Loader2 } from 'lucide-react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Torus } from '@react-three/drei';
 import * as THREE from 'three';
+import emailjs from '@emailjs/browser';
+import toast, { Toaster } from 'react-hot-toast';
 
 const WireframeTorus = ({ position, args, speed, color, baseOpacity = 0.3, rotation = [0,0,0] }) => {
   const torusRef = useRef();
@@ -41,7 +43,9 @@ gsap.registerPlugin(ScrollTrigger);
 
 const Contact = () => {
   const sectionRef = useRef(null);
+  const formRef = useRef(null);
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const elements = sectionRef.current.children;
@@ -87,12 +91,37 @@ const Contact = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
-    const { name, email, message } = formData;
-    const subject = encodeURIComponent('Portfolio Contact');
-    const body = encodeURIComponent(`Hello Gungun,\n\nI want to connect.\n\nFrom: ${name} (${email})\n\nMessage:\n${message}`);
-    window.location.href = `mailto:gungunpathak.2006@gmail.com?subject=${subject}&body=${body}`;
+    if (!formData.name || !formData.email || !formData.message) {
+      toast.error('Please fill in all fields');
+      return;
+    }
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      toast.error('Please enter a valid email address');
+      return;
+    }
+
+    setIsSubmitting(true);
+    
+    try {
+      await emailjs.sendForm(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+        formRef.current,
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+      );
+      
+      toast.success('Message sent successfully!');
+      setFormData({ name: '', email: '', message: '' });
+    } catch (error) {
+      console.error('EmailJS Error:', error);
+      toast.error('Failed to send message. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -143,7 +172,7 @@ const Contact = () => {
           
           <h3 className="text-2xl font-bold text-white mb-8 relative z-10">Drop a Message</h3>
           
-          <form className="relative z-10 space-y-6 text-left" onSubmit={handleFormSubmit}>
+          <form ref={formRef} className="relative z-10 space-y-6 text-left" onSubmit={handleFormSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-300 ml-1">Name</label>
@@ -158,13 +187,42 @@ const Contact = () => {
               <label className="text-sm font-medium text-gray-300 ml-1">Message</label>
               <textarea required rows="4" name="message" value={formData.message} onChange={handleInputChange} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all" placeholder="Tell me about your project..."></textarea>
             </div>
-            <button type="submit" className="w-full group relative inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary text-black font-bold rounded-xl overflow-hidden transition-all hover:shadow-[0_0_20px_rgba(0,255,204,0.4)]">
-              Send Message
-              <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+            <button 
+              type="submit" 
+              disabled={isSubmitting}
+              className={`w-full group relative inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary text-black font-bold rounded-xl overflow-hidden transition-all ${isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:shadow-[0_0_20px_rgba(0,255,204,0.4)]'}`}
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Sending...
+                </>
+              ) : (
+                <>
+                  Send Message
+                  <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                </>
+              )}
             </button>
           </form>
         </div>
 
+        <Toaster 
+          position="bottom-right" 
+          toastOptions={{
+            style: {
+              background: '#1a1a1a',
+              color: '#fff',
+              border: '1px solid rgba(255,255,255,0.1)'
+            },
+            success: {
+              iconTheme: {
+                primary: '#00ffcc',
+                secondary: '#1a1a1a',
+              },
+            },
+          }} 
+        />
       </div>
     </section>
   );

@@ -55,24 +55,31 @@ const Projects = () => {
 
   const projects = [
     {
+      title: 'Spam Detection Web Application',
+      description: 'Real-time Machine Learning web application that instantly classifies messages as Spam or Ham. Demonstrates an end-to-end ML pipeline featuring advanced NLP text preprocessing, vectorization, and model deployment.',
+      tech: ['Python', 'Flask', 'Scikit-learn', 'NLP', 'HTML', 'CSS'],
+      github: 'https://github.com/gungunpathak28/spam-detection-project',
+      live: 'https://spam-detection-project-azure.vercel.app/'
+    },
+    {
       title: 'Smart Motion Surveillance',
       description: 'A real-time motion detection system with alerts and anomaly detection.',
       tech: ['React', 'WebRTC', 'Express'],
-      github: '#',
+      github: 'https://github.com/gungunpathak28/motion-detection',
       live: 'https://motion-detection-eta.vercel.app/'
     },
     {
       title: 'RentIt Platform',
       description: 'A full-stack rental marketplace with authentication, payments, and tracking.',
       tech: ['MERN Stack', 'Stripe API'],
-      github: '#',
+      github: 'https://github.com/gungunpathak28/Rent-it',
       live: 'https://rent-it-chi.vercel.app/'
     },
     {
       title: 'Smart Voting System',
       description: 'A secure digital voting system with authentication and transparency.',
       tech: ['HTML', 'CSS', 'JavaScript'],
-      github: '#',
+      github: 'https://github.com/gungunpathak28/smart-voting-system',
       live: 'https://smart-voting-system-snowy.vercel.app/smart-voting-system/'
     },
     {
@@ -80,14 +87,6 @@ const Projects = () => {
       badge: 'In Progress',
       description: 'Scan products and get notifications before expiry date. (AI-based project)',
       tech: ['AI/ML', 'Mobile/Full-stack'],
-      github: '#',
-      live: '#'
-    },
-    {
-      title: 'Digital Intelligence Platform',
-      badge: 'In Progress',
-      description: 'A comprehensive platform for digital analytics and intelligence gathering.',
-      tech: ['React', 'Node.js', 'AI'],
       github: '#',
       live: '#'
     }
@@ -116,7 +115,7 @@ const Projects = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {projects.map((project, index) => (
-            <div key={index} className="project-card glass-card group relative overflow-hidden">
+            <div key={index} className="project-card glass-card group relative overflow-hidden flex flex-col hover:border-primary/30 transition-all duration-500">
               {/* Hover gradient background effect */}
               <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               
@@ -124,18 +123,6 @@ const Projects = () => {
                 <div className="flex justify-between items-start mb-6">
                   <div className="p-3 bg-white/5 rounded-xl text-primary group-hover:shadow-[0_0_20px_rgba(0,255,204,0.3)] transition-all">
                     <FolderGit2 className="w-8 h-8" />
-                  </div>
-                  <div className="flex gap-4">
-                    {project.github !== '#' && (
-                      <a href={project.github} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white hover:scale-110 transition-all">
-                        <GithubIcon className="w-6 h-6" />
-                      </a>
-                    )}
-                    {project.live !== '#' && (
-                      <a href={project.live} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-primary hover:scale-110 transition-all">
-                        <ExternalLink className="w-6 h-6" />
-                      </a>
-                    )}
                   </div>
                 </div>
 
@@ -151,12 +138,27 @@ const Projects = () => {
                   {project.description}
                 </p>
 
-                <div className="flex flex-wrap gap-2 mt-auto">
+                <div className="flex flex-wrap gap-2 mb-8">
                   {project.tech.map((tech, tIndex) => (
-                    <span key={tIndex} className="text-xs font-medium px-3 py-1 bg-primary/10 text-primary rounded-full">
+                    <span key={tIndex} className="text-xs font-medium px-3 py-1 bg-primary/10 text-primary rounded-full border border-primary/20">
                       {tech}
                     </span>
                   ))}
+                </div>
+
+                <div className="flex flex-wrap gap-4 mt-auto">
+                  {project.live !== '#' && (
+                    <a href={project.live} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 flex-1 text-sm font-semibold px-4 py-3 bg-primary/10 hover:bg-primary/20 border border-primary/30 rounded-xl text-primary transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,255,204,0.3)] hover:-translate-y-1">
+                      <ExternalLink className="w-4 h-4" />
+                      Live Demo
+                    </a>
+                  )}
+                  {project.github !== '#' && (
+                    <a href={project.github} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 flex-1 text-sm font-semibold px-4 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-white transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:-translate-y-1">
+                      <GithubIcon className="w-4 h-4" />
+                      GitHub
+                    </a>
+                  )}
                 </div>
               </div>
             </div>

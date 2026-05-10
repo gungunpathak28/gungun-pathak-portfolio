@@ -8,35 +8,50 @@ const Skills = () => {
   const sectionRef = useRef(null);
 
   useEffect(() => {
-    const bars = sectionRef.current.querySelectorAll('.skill-bar-fill');
+    const cards = sectionRef.current.querySelectorAll('.skill-card');
     
-    gsap.fromTo(bars,
-      { width: 0 },
+    gsap.fromTo(cards,
+      { y: 50, opacity: 0 },
       {
-        width: (i, el) => el.getAttribute('data-width'),
-        duration: 1.5,
+        y: 0,
+        opacity: 1,
+        duration: 0.8,
+        stagger: 0.1,
         ease: 'power3.out',
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: 'top 75%',
+          start: 'top 80%',
         }
       }
     );
   }, []);
 
-  const languages = [
-    { name: 'HTML5 / CSS3', width: '90%' },
-    { name: 'Python', width: '70%' },
-    { name: 'Java', width: '70%' },
-    { name: 'JavaScript', width: '45%' },
-    { name: 'DSA', width: '40%' }
+  const skillCategories = [
+    {
+      title: 'Languages',
+      skills: ['Python', 'Java', 'JavaScript', 'DSA']
+    },
+    {
+      title: 'Frontend',
+      skills: ['React.js', 'HTML5', 'CSS3']
+    },
+    {
+      title: 'Backend',
+      skills: ['Node.js', 'Express.js']
+    },
+    {
+      title: 'Database',
+      skills: ['MongoDB', 'Oracle SQL']
+    },
+    {
+      title: 'AI / ML',
+      skills: ['Machine Learning', 'OpenCV', 'AI Tools Integration']
+    },
+    {
+      title: 'Tools',
+      skills: ['Git & GitHub', 'VS Code', 'Eclipse', 'Arduino', 'WordPress', 'Command Line']
+    }
   ];
-
-  const frameworks = ['React.js', 'Node.js', 'Express', 'WordPress'];
-  const databases = ['MongoDB', 'Oracle'];
-  
-  const aiml = ['OpenCV', 'AI Tools Integration', 'Machine Learning'];
-  const tools = ['GitHub', 'VS Code', 'Eclipse', 'Arduino', 'Excel', 'Command Line'];
 
   return (
     <section id="skills" className="py-24 relative z-10" ref={sectionRef}>
@@ -55,81 +70,29 @@ const Skills = () => {
           </h2>
         </div>
 
-        {/* 3 Column Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
-          {/* Column 1: Languages (Bars) */}
-          <div className="bg-[#0f0f11] border border-white/5 p-8 rounded-lg shadow-2xl relative overflow-hidden group">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-            <h3 className="text-gray-500 text-xs font-bold tracking-[0.2em] uppercase mb-8 relative z-10">Languages</h3>
-            <div className="space-y-8 relative z-10">
-              {languages.map((lang, index) => (
-                <div key={index} className="space-y-3">
-                  <div className="text-sm font-semibold text-gray-200">{lang.name}</div>
-                  <div className="h-[2px] w-full bg-white/10 relative">
-                    <div 
-                      className="skill-bar-fill absolute top-0 left-0 h-full bg-gradient-to-r from-primary to-secondary shadow-[0_0_10px_rgba(0,255,204,0.5)]"
-                      data-width={lang.width}
-                      style={{ width: '0%' }}
-                    ></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Column 2: Frameworks & Databases */}
-          <div className="bg-[#0f0f11] border border-white/5 p-8 rounded-lg shadow-2xl flex flex-col gap-10 relative overflow-hidden group">
-            <div className="absolute inset-0 bg-gradient-to-br from-secondary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-            <div className="relative z-10">
-              <h3 className="text-gray-500 text-xs font-bold tracking-[0.2em] uppercase mb-6">Frameworks & Other</h3>
-              <div className="flex flex-wrap gap-3">
-                {frameworks.map((fw, index) => (
-                  <span key={index} className="px-4 py-1.5 border border-white/10 text-gray-400 text-sm hover:border-primary/50 hover:text-white hover:bg-white/5 transition-colors cursor-default rounded-sm">
-                    {fw}
+        {/* Categories Grid Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {skillCategories.map((category, index) => (
+            <div key={index} className="skill-card bg-[#0f0f11] border border-white/5 p-8 rounded-2xl shadow-2xl relative overflow-hidden group hover:border-primary/30 transition-all duration-500">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+              
+              <h3 className="text-gray-400 text-sm font-bold tracking-[0.15em] uppercase mb-6 relative z-10 flex items-center gap-3">
+                <span className="w-2 h-2 rounded-full bg-primary/80 shadow-[0_0_8px_rgba(0,255,204,0.5)]"></span>
+                {category.title}
+              </h3>
+              
+              <div className="flex flex-wrap gap-3 relative z-10">
+                {category.skills.map((skill, sIndex) => (
+                  <span 
+                    key={sIndex} 
+                    className="px-4 py-2 border border-white/10 text-gray-300 text-sm font-medium rounded-lg hover:border-primary/50 hover:text-white hover:bg-primary/10 transition-all duration-300 cursor-default shadow-sm hover:shadow-[0_0_15px_rgba(0,255,204,0.2)] hover:-translate-y-0.5"
+                  >
+                    {skill}
                   </span>
                 ))}
               </div>
             </div>
-
-            <div className="relative z-10">
-              <h3 className="text-gray-500 text-xs font-bold tracking-[0.2em] uppercase mb-6">Databases</h3>
-              <div className="flex flex-wrap gap-3">
-                {databases.map((db, index) => (
-                  <span key={index} className="px-4 py-1.5 border border-white/10 text-gray-400 text-sm hover:border-primary/50 hover:text-white hover:bg-white/5 transition-colors cursor-default rounded-sm">
-                    {db}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Column 3: AI/ML & Tools */}
-          <div className="bg-[#0f0f11] border border-white/5 p-8 rounded-lg shadow-2xl flex flex-col gap-10 relative overflow-hidden group">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-            <div className="relative z-10">
-              <h3 className="text-gray-500 text-xs font-bold tracking-[0.2em] uppercase mb-6">AI / ML</h3>
-              <div className="flex flex-wrap gap-3">
-                {aiml.map((ai, index) => (
-                  <span key={index} className="px-4 py-1.5 border border-primary/30 text-primary text-sm hover:bg-primary/10 transition-colors cursor-default rounded-sm shadow-[0_0_10px_rgba(0,255,204,0.1)]">
-                    {ai}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div className="relative z-10">
-              <h3 className="text-gray-500 text-xs font-bold tracking-[0.2em] uppercase mb-6">Tools</h3>
-              <div className="flex flex-wrap gap-3">
-                {tools.map((tool, index) => (
-                  <span key={index} className="px-4 py-1.5 border border-white/10 text-gray-400 text-sm hover:border-primary/50 hover:text-white hover:bg-white/5 transition-colors cursor-default rounded-sm">
-                    {tool}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-
+          ))}
         </div>
       </div>
     </section>

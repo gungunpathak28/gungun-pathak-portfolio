@@ -1,7 +1,38 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Code, BookOpen, Briefcase } from 'lucide-react';
+import { statsConfig } from '../config';
+
+const CountUp = ({ end, duration = 2, suffix = '' }) => {
+  const [count, setCount] = useState(0);
+  const nodeRef = useRef(null);
+
+  useEffect(() => {
+    const obj = { val: 0 };
+    const ctx = gsap.context(() => {
+      ScrollTrigger.create({
+        trigger: nodeRef.current,
+        start: "top 80%",
+        onEnter: () => {
+          gsap.to(obj, {
+            val: end,
+            duration: duration,
+            ease: "power3.out",
+            onUpdate: () => {
+              setCount(Math.floor(obj.val));
+            }
+          });
+        },
+        once: true
+      });
+    }, nodeRef);
+
+    return () => ctx.revert();
+  }, [end, duration]);
+
+  return <span ref={nodeRef}>{count}{suffix}</span>;
+};
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -28,8 +59,8 @@ const About = () => {
   }, []);
 
   const stats = [
-    { icon: <Code className="w-8 h-8 text-primary" />, title: 'Active + Completed', value: '4 Projects' },
-    { icon: <BookOpen className="w-8 h-8 text-primary" />, title: 'Verified', value: '6 Certifications' },
+    { icon: <Code className="w-8 h-8 text-primary" />, title: 'Active + Completed', value: statsConfig.projectsCount, suffix: '+ Projects' },
+    { icon: <BookOpen className="w-8 h-8 text-primary" />, title: 'Verified', value: statsConfig.certificationsCount, suffix: '+ Certifications' },
   ];
 
   return (
@@ -58,7 +89,9 @@ const About = () => {
                   <div className="mb-4 p-4 rounded-full bg-white/5 border border-white/10">
                     {stat.icon}
                   </div>
-                  <h4 className="text-3xl font-bold text-white mb-2">{stat.value}</h4>
+                  <h4 className="text-3xl font-bold text-white mb-2">
+                    <CountUp end={stat.value} suffix={stat.suffix} />
+                  </h4>
                   <p className="text-gray-400 font-medium">{stat.title}</p>
                 </div>
               ))}
